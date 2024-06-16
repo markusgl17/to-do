@@ -1,38 +1,9 @@
-//create new List item
-
-// const createNewListItem = (e) => {
-//   e.preventDefault();
-//   const itemInput = document.getElementById('item-input').value;
-//   const list = document.querySelector('#item-list');
-
-//   const newLi = document.createElement('li');
-//   newLi.innerText = itemInput;
-
-//   newLi.appendChild(createRemoveButton());
-//   list.appendChild(newLi);
-// };
-
-// const createRemoveButton = () => {
-//   const newBtn = document.createElement('button');
-//   newBtn.classList.add('remove-item', 'btn-link', 'text-red');
-
-//   const newI = document.createElement('i');
-//   newI.classList.add('fa-solid', 'fa-xmark');
-
-//   newBtn.appendChild(newI);
-
-//   return newBtn;
-// };
-
-// const addItemButton = document
-//   .querySelector('#item-form')
-//   .children[1].querySelector('.btn');
-
-// addItemButton.addEventListener('click', createNewListItem);
-
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
+const clearButton = document.getElementById('clear');
+const itemFilter = document.getElementById('filter');
+const items = document.querySelectorAll('li');
 
 function addItem(e) {
   e.preventDefault();
@@ -73,4 +44,23 @@ function createIcon(classes) {
   return i;
 }
 
+function removeItem(e) {
+  if (e.target.parentElement.classList.contains('remove-item')) {
+    e.target.parentElement.parentElement.remove();
+  }
+}
+
+function clearAllItems() {
+  itemListArray = Array.from(itemList.children);
+  itemListArray.forEach((item) => item.remove());
+}
+
+function checkUI() {
+  if (items.length === 0) {
+  }
+}
+
+//EventListeners
 itemForm.addEventListener('submit', addItem);
+itemList.addEventListener('click', removeItem);
+clearButton.addEventListener('click', clearAllItems);
