@@ -1,7 +1,11 @@
 itemForm = document.getElementById('item-form');
+editForm = document.getElementById('edit-form');
 itemList = document.getElementById('item-list');
 clearBtn = document.getElementById('clear');
 filter = document.getElementById('filter');
+exitEdit = document.getElementById('exit-edit');
+
+var oldItem = '';
 
 function getItemFromForm(e) {
   e.preventDefault();
@@ -30,6 +34,44 @@ function setItemToLocalStorage(item) {
   items_JSON = JSON.stringify(items);
   console.log(items_JSON);
   localStorage.setItem('items', items_JSON);
+}
+
+function setEditMode(e) {
+  if (e.target.tagName === 'LI') {
+    itemForm.style.display = 'None';
+    filter.style.display = 'None';
+    editForm.style.display = 'block';
+    Array.from(itemList.children).forEach((element) => {
+      element.style.color = '#000';
+      console.log(element);
+    });
+    e.target.style.color = 'grey';
+    editInput = document.getElementById('edit-input');
+    oldItem = e.target.textContent;
+    editInput.value = e.target.textContent;
+    editInput.focus();
+  }
+}
+
+function offsetEditMode() {
+  itemForm.style.display = 'block';
+  filter.style.display = 'block';
+  editForm.style.display = 'None';
+}
+
+function editItemFromForm(e) {
+  e.preventDefault();
+  newItem = editInput.value;
+  items = getItemsFromLocalStorage();
+  index = items.indexOf(oldItem);
+  if (index >= 0) {
+    items[index] = newItem;
+    items_JSON = JSON.stringify(items);
+    console.log(items_JSON);
+    localStorage.setItem('items', items_JSON);
+    displayItemsUI();
+    offsetEditMode();
+  }
 }
 
 function filterItems(e) {
@@ -62,7 +104,11 @@ function deleteItemFromLocalStorage(item) {
   console.log(checkElementInArray(item, items));
   console.log(`Items delete single: ${items}`);
   if (true) {
-    items.pop(item);
+    const index = items.indexOf(item);
+    if (index !== -1) {
+      // Check if the element exists
+      items.splice(index, 1);
+    }
     items_JSON = JSON.stringify(items);
     console.log(items_JSON);
     localStorage.setItem('items', items_JSON);
@@ -93,15 +139,16 @@ function displayItemsUI(filtered_items) {
   items = getItemsFromLocalStorage();
   if (filtered_items) {
     items = filtered_items;
-    console.log(items);
   }
-  console.log(items);
+
   items.forEach((item) => displaySingleItemUI(item));
 }
 
 function deleteLI(e) {
   if (e.target.tagName === 'I') {
     const itemText = e.target.parentElement.parentElement.textContent;
+    itemText;
+    console.log(`Items text ${itemText}`);
     deleteItemFromLocalStorage(itemText);
   }
 }
@@ -126,4 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
   displayItemsUI();
   clearBtn.addEventListener('click', clear);
   filter.addEventListener('input', filterItems);
+  itemList.addEventListener('click', setEditMode);
+  editForm.addEventListener('submit', editItemFromForm);
+  exitEdit.addEventListener('click', offsetEditMode);
 });

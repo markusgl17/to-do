@@ -86,6 +86,22 @@ header h1 {
   cursor: pointer;
 }
 
+#edit-form button{
+  background-color: green;
+}
+
+#edit-form{
+  display: none;
+}
+
+button#exit-edit{
+  border: 1px solid #ccc;
+  padding: 1px;
+  color: red;
+  background-color: transparent;
+  margin-left: 5px;
+}
+
 .btn-clear {
   margin-top: 20px;
   width: 100%;
